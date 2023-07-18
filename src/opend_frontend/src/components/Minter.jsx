@@ -1,6 +1,25 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 
 function Minter() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  
+  // console.log(watch("uploadFile"));
+  // console.log(watch("nftName"));
+
+  async function onSubmit(data){
+    const { uploadFile, nftName } = data;
+    const fileObj = uploadFile[0];
+    const fileArrayBuffer = await fileObj.arrayBuffer();
+    const fileByteData = [... new Uint8Array(fileArrayBuffer)];
+    console.log(fileByteData);
+  }
+  
   return (
     <div className="minter-container">
       <h3 className="makeStyles-title-99 Typography-h3 form-Typography-gutterBottom">
@@ -15,6 +34,7 @@ function Minter() {
             className="upload"
             type="file"
             accept="image/x-png,image/jpeg,image/gif,image/svg+xml,image/webp"
+            {...register("uploadFile", {required: true})}
           />
         </div>
         <h6 className="form-Typography-root makeStyles-subhead-102 form-Typography-subtitle1 form-Typography-gutterBottom">
@@ -26,12 +46,13 @@ function Minter() {
               placeholder="e.g. CryptoDunks"
               type="text"
               className="form-InputBase-input form-OutlinedInput-input"
+              {...register("nftName", {required: true})}
             />
             <fieldset className="PrivateNotchedOutline-root-60 form-OutlinedInput-notchedOutline"></fieldset>
           </div>
         </div>
         <div className="form-ButtonBase-root form-Chip-root makeStyles-chipBlue-108 form-Chip-clickable">
-          <span className="form-Chip-label">Mint NFT</span>
+          <span onClick={handleSubmit(onSubmit)} className="form-Chip-label">Mint NFT</span>
         </div>
       </form>
     </div>
